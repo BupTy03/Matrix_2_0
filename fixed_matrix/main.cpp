@@ -2,14 +2,14 @@
 
 #include <iostream>
 
-template<class T, const matrix_index RowsCount, const matrix_index ColumnsCount>
+template<class T, const std::size_t RowsCount, const std::size_t ColumnsCount>
 std::ostream& operator <<(std::ostream& os, const fixed_matrix<T, RowsCount, ColumnsCount>& m)
 {
 	os << "{ ";
-	for (matrix_index i = 0; i < RowsCount; ++i)
+	for (std::size_t i = 0; i < RowsCount; ++i)
 	{
 		os << "{ ";
-		for (matrix_index j = 0; j < ColumnsCount; ++j)
+		for (std::size_t j = 0; j < ColumnsCount; ++j)
 		{
 			os << m(i, j);
 

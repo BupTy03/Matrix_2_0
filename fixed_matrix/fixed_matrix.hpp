@@ -3,7 +3,6 @@
 #ifndef FIXED_MATRIX_HPP
 #define FIXED_MATRIX_HPP
 
-#include <string>
 #include <stdexcept>
 #include <algorithm>
 
@@ -12,13 +11,11 @@ struct fixed_matrix_error : std::runtime_error {
 	explicit fixed_matrix_error(const std::string& n) : std::runtime_error(n) {}
 };
 
-using matrix_index = std::size_t;
-
-template<typename T, const matrix_index RowsCount, const matrix_index ColumnsCount>
+template<typename T, const std::size_t RowsCount, const std::size_t ColumnsCount>
 struct fixed_matrix
 {
 	using value_type = T;
-	using size_type = matrix_index;
+	using size_type = std::size_t;
 	using difference_type = std::ptrdiff_t;
 	using reference = T&;
 	using const_reference = const T&;
@@ -32,16 +29,12 @@ struct fixed_matrix
 
 	enum { LINEAR_SIZE = RowsCount * ColumnsCount };
 
-public:
 	constexpr explicit fixed_matrix() noexcept 
 		: elems_{} 
 	{}
 	explicit fixed_matrix(const T& val) { std::fill(begin(), end(), val); }
 
-	explicit fixed_matrix(const T(&arr)[LINEAR_SIZE])
-	{
-		std::copy(std::cbegin(arr), std::cend(arr), begin());
-	}
+	explicit fixed_matrix(const T(&arr)[LINEAR_SIZE]) { std::copy(std::cbegin(arr), std::cend(arr), begin()); }
 
 	explicit fixed_matrix(const T(&arr)[RowsCount][ColumnsCount])
 	{
@@ -56,10 +49,7 @@ public:
 		std::copy(std::cbegin(init_lst), std::cend(init_lst), begin());
 	}
 
-	fixed_matrix(const fixed_matrix& other)
-	{
-		std::copy(std::cbegin(other), std::cend(other), begin());
-	}
+	fixed_matrix(const fixed_matrix& other) { std::copy(std::cbegin(other), std::cend(other), begin()); }
 	fixed_matrix& operator =(const fixed_matrix& other)
 	{
 		if (this == &other)
@@ -116,9 +106,9 @@ public:
 private:
 	constexpr inline void range_check(size_type row_index, size_type col_index) const
 	{
-		if (row_index < 0 || row_index >= RowsCount)
+		if (row_index >= RowsCount)
 			throw fixed_matrix_error{ "range error: row_index is out of range" };
-		if (col_index < 0 || col_index >= ColumnsCount)
+		if (col_index >= ColumnsCount)
 			throw fixed_matrix_error{ "range error: col_index is out of range" };
 	}
 
